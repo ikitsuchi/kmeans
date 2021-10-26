@@ -4,7 +4,7 @@ https://github.com/heptagonhust/recruitment-2021-autumn
 
 ## 设备信息
 
-CPU: AMD Ryzen 7 5800HS Creator Edition (16) @3.200GHz
+CPU: AMD Ryzen 7 5800HS Creator Edition (8C16T) @3.200GHz
 
 RAM: 16GB LPDDR4 @4266MHz
 
@@ -34,7 +34,7 @@ RAM: 16GB LPDDR4 @4266MHz
 
 划分点集的大循环计算量非常庞大，考虑用多线程优化它。
 
-优化后程序运行时长 `1.54125s`，相对于原代码，速度提升了 13.297 倍，已经非常接近题面的 15.6 倍了！
+优化后程序运行时长 `1.4886s`，相对于原代码，速度提升了 13.732 倍，已经非常接近题面的 15.6 倍了！
 
 #### 困惑
 
