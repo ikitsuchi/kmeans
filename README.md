@@ -1,3 +1,7 @@
+# 华科七边形 2021 秋季招新试题解答
+
+https://github.com/heptagonhust/recruitment-2021-autumn
+
 ## 设备信息
 
 CPU: AMD Ryzen 7 5800HS Creator Edition (16) @3.200GHz
