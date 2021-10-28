@@ -1,10 +1,10 @@
 #include "kmeans.hpp"
 
 #include <cassert>
+#include <chrono>
 #include <limits>
 #include <queue>
 #include <thread>
-#include <chrono>
 
 using std::chrono::duration_cast;
 using std::chrono::high_resolution_clock;
@@ -46,8 +46,7 @@ std::vector<index_t> Kmeans::Run(int max_iterations) {
     ++curr_iteration;
     bool changed = false;
 
-    //auto start = high_resolution_clock::now();
-    #pragma omp parallel for
+#pragma omp parallel for
     for (int i = 0; i < m_numPoints; ++i) {
       Point &p_i = m_points[i];
       double min_dis = std::numeric_limits<double>::max();
@@ -65,9 +64,7 @@ std::vector<index_t> Kmeans::Run(int max_iterations) {
         changed = true;
       }
     }
-    //auto end = high_resolution_clock::now();
-    //loop_1 += (double) duration_cast<microseconds>(end - start).count() / 1000000.0;
-    
+
     if (!changed) {
       goto converge;
     }
@@ -75,15 +72,40 @@ std::vector<index_t> Kmeans::Run(int max_iterations) {
     m_centers.assign(m_numCenters, Point());
     p_cnt.assign(m_numPoints, 0);
 
-    //start = high_resolution_clock::now();
-    for (int i = 0; i < m_numPoints; ++i) {
+    int i;
+    for (i = 0; i < m_numPoints - 3; i += 4) {
       index_t cluster_1 = assignment[i];
-      m_centers[cluster_1].x += m_points[i].x;
-      m_centers[cluster_1].y += m_points[i].y;
+      index_t cluster_2 = assignment[i + 1];
+      index_t cluster_3 = assignment[i + 2];
+      index_t cluster_4 = assignment[i + 3];
+
+      auto point_1_x = m_points[i].x, point_1_y = m_points[i].y;
+      auto point_2_x = m_points[i + 1].x, point_2_y = m_points[i + 1].y;
+      auto point_3_x = m_points[i + 2].x, point_3_y = m_points[i + 2].y;
+      auto point_4_x = m_points[i + 3].x, point_4_y = m_points[i + 3].y;
+
+      m_centers[cluster_1].x += point_1_x;
+      m_centers[cluster_1].y += point_1_y;
+      m_centers[cluster_2].x += point_2_x;
+      m_centers[cluster_2].y += point_2_y;
+      m_centers[cluster_3].x += point_3_x;
+      m_centers[cluster_3].y += point_3_y;
+      m_centers[cluster_4].x += point_4_x;
+      m_centers[cluster_4].y += point_4_y;
+
+      ++p_cnt[cluster_1];
+      ++p_cnt[cluster_2];
+      ++p_cnt[cluster_3];
+      ++p_cnt[cluster_4];
+    }
+
+    for (; i < m_numPoints; ++i) {
+      index_t cluster_1 = assignment[i];
+      auto point_x = m_points[i].x, point_y = m_points[i].y;
+      m_centers[cluster_1].x += point_x;
+      m_centers[cluster_1].y += point_y;
       ++p_cnt[cluster_1];
     }
-    //end = high_resolution_clock::now();
-    //loop_2 += (double) duration_cast<microseconds>(end - start).count() / 1000000.0;
 
     for (int j = 0; j < m_numCenters; ++j) {
       m_centers[j].x /= p_cnt[j];
@@ -93,7 +115,5 @@ std::vector<index_t> Kmeans::Run(int max_iterations) {
 
 converge:
   std::cout << "Finished in " << curr_iteration << " iterations." << std::endl;
-  //std::cout << "Loop_1 time cost: " << loop_1 << "s" << std::endl;
-  //std::cout << "Loop_2 time cost: " << loop_2 << "s" << std::endl;
   return assignment;
 }

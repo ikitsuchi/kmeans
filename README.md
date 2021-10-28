@@ -58,8 +58,16 @@ RAM: 16GB LPDDR4 @4266MHz
 
 优化后程序运行时长 `1.18603s`，相对于原代码，速度提升了 17.280 倍。
 
+### 增强代码的局部性 & 循环展开
+
+`m_centers[cluster_1].y += m_points[i].y;` 这个语句不断的交叉引用 m_centers 和 m_points，可以先连续引用了 `m_points[i]`，把值存下来，之后之间用局部变量，提高了代码的空间局部性。这一步非常有效，将代码运行时间优化到了 `1.1s`。
+
+这个循环里都是结构体，我不知道怎么用或者是能不能用 SIMD 优化。于是我用了循环展开，经测试展开 4 次的结果比较一颗赛艇。
+
+优化后程序运行时长 `0.921956s`，相对于原代码，速度提升了 22.229 倍。
+
 ## 参考资料
 
-* CS:APP Chapter 5
+* CS:APP Chapter 5 & 6
 
 * [Guide into OpenMP: Easy multithreading programming for C++](https://bisqwit.iki.fi/story/howto/openmp/#Abstract)
