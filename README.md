@@ -2,6 +2,8 @@
 
 https://github.com/heptagonhust/recruitment-2021-autumn
 
+最终的加速比：26.123。
+
 ## 设备信息
 
 CPU: AMD Ryzen 7 5800HS Creator Edition (8C16T) @3.200GHz
