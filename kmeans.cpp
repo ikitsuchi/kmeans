@@ -1,14 +1,9 @@
 #include "kmeans.hpp"
 
 #include <cassert>
-#include <chrono>
 #include <limits>
 #include <queue>
 #include <thread>
-
-using std::chrono::duration_cast;
-using std::chrono::high_resolution_clock;
-using std::chrono::microseconds;
 
 inline double Point::Distance(const Point &other) const noexcept {
   double a = x - other.x;
@@ -39,8 +34,6 @@ std::vector<index_t> Kmeans::Run(int max_iterations) {
             << ", num centers = " << m_numCenters
             << ", max iterations = " << max_iterations << "...\n";
 
-  double loop_1 = 0, loop_2 = 0;
-
   std::vector<int> p_cnt(m_numCenters, 0);
   while (max_iterations--) {
     ++curr_iteration;
@@ -70,7 +63,7 @@ std::vector<index_t> Kmeans::Run(int max_iterations) {
     }
 
     m_centers.assign(m_numCenters, Point());
-    p_cnt.assign(m_numPoints, 0);
+    p_cnt.assign(m_numCenters, 0);
 
     int i;
     for (i = 0; i < m_numPoints - 3; i += 4) {
